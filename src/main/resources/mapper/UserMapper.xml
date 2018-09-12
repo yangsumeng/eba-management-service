@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ebei.eba.mapper.UserMapper">
+    <!-- auto code version 1.4 -->
+    <!-- 通用查询映射结果 自动生成 2018-09-03 -->
+    <resultMap id="BaseResultMap" type="com.ebei.eba.model.entity.User">
+        <id column="user_id" property="userId" />
+        <result column="user_account" property="userAccount" />
+        <result column="user_name" property="userName" />
+        <result column="password" property="password" />
+        <result column="telephone" property="telephone" />
+        <result column="sex" property="sex" />
+        <result column="remark" property="remark" />
+        <result column="job_number" property="jobNumber" />
+        <result column="company_id" property="companyId" />
+        <result column="is_admin" property="isAdmin" />
+        <result column="role_id" property="roleId" />
+        <result column="app_push_flag" property="appPushFlag" />
+        <result column="state" property="state" />
+        <result column="creator" property="creator" />
+        <result column="create_date" property="createDate" />
+        <result column="operator" property="operator" />
+        <result column="operate_date" property="operateDate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 自动生成 2018-09-03 -->
+    <sql id="Base_Column_List">
+ user_id AS userId, user_account AS userAccount, user_name AS userName,password,telephone,sex,remark, job_number AS jobNumber, company_id AS companyId, is_admin AS isAdmin, role_id AS roleId, app_push_flag AS appPushFlag,state,creator, create_date AS createDate,operator, operate_date AS operateDate    </sql>
+
+    <!-- 自动生成 2018-09-03 -->
+    <select id="selectMapList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM iot_user
+        WHERE 1=1
+            <if test="userId != null" >
+                and user_id = #{userId}
+            </if>
+            <if test="userAccount != null" >
+                and user_account = #{userAccount}
+            </if>
+            <if test="userName != null" >
+               and user_name like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="password != null" >
+                and password = #{password}
+            </if>
+            <if test="telephone != null" >
+                and telephone = #{telephone}
+            </if>
+            <if test="sex != null" >
+                and sex = #{sex}
+            </if>
+            <if test="remark != null" >
+                and remark = #{remark}
+            </if>
+            <if test="jobNumber != null" >
+                and job_number = #{jobNumber}
+            </if>
+            <if test="companyId != null" >
+                and company_id = #{companyId}
+            </if>
+            <if test="isAdmin != null" >
+                and is_admin = #{isAdmin}
+            </if>
+            <if test="roleId != null" >
+                and role_id = #{roleId}
+            </if>
+            <if test="appPushFlag != null" >
+                and app_push_flag = #{appPushFlag}
+            </if>
+            <if test="state != null" >
+                and state = #{state}
+            </if>
+            <if test="creator != null" >
+                and creator = #{creator}
+            </if>
+            <if test="createDate != null" >
+                and create_date = #{createDate}
+            </if>
+            <if test="operator != null" >
+                and operator = #{operator}
+            </if>
+            <if test="operateDate != null" >
+                and operate_date = #{operateDate}
+            </if>
+    </select>
+
+    <!-- 前端页面select框查询 自动生成 2018-09-03 -->
+    <select id="getLabelAndValueList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+        t.user_id as value,
+        t.user_name as label
+        FROM iot_user t
+        WHERE 1=1 and t.state =1
+    <if test="userId != null" >
+        and t.user_id = #{userId}
+    </if>
+    <if test="companyId != null" >
+        and t.company_id = #{companyId}
+    </if>
+    <if test="roleId != null" >
+        and t.role_id = #{roleId}
+    </if>
+        order by t.operate_date desc
+    </select>
+
+    <!-- emptyMethod1 方法 自动生成 2018-09-03 -->
+    <select id="emptyMethod1" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * from iot_user t where 1=1 and t.state =1
+    </select>
+    <!-- emptyMethod2 方法 自动生成 2018-09-03 -->
+    <select id="emptyMethod2" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * from iot_user t where 1=1 and t.state =1
+    </select>
+    <!-- getShowDeviceLevelPage 方法 自动生成 2018-09-03 -->
+    <select id="getShowDeviceLevelPage" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT * from iot_user t where 1=1 and t.state =1
+    </select>
+    
+    <!-- 根据userAccount 查询用户表 -->
+	<select id="getByAccount" parameterType="java.lang.String"
+		resultType="com.ebei.eba.model.entity.User">
+		select
+		<include refid="Base_Column_List" />
+		from iot_user
+		where user_account = #{userAccount,jdbcType=VARCHAR}
+	</select>
+    
+    
+
+</mapper>

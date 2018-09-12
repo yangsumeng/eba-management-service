@@ -1,0 +1,4 @@
+
+spring:
+  profiles:
+    active: dev  # dev开发配置文件   prod生产配置文件
