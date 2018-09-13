@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
+import java.io.Serializable;
+
 /**
  * @Author: Huangweicai
  * @date 2018-02-05 16:10
  * @Description:请求封装基础类
  */
-public class ResponseEx<T> {
+public class ResponseEx<T> implements Serializable {
     private int status;
     private String message;
     private T data;

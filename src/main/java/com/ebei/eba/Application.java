@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -23,6 +24,7 @@ import java.util.List;
 @EnableTransactionManagement
 @SpringBootApplication
 //@EnableDiscoveryClient
+@EnableCaching            //启动缓存CacheConfig中设置
 public class Application {
 
     protected final static Logger logger = LoggerFactory.getLogger(Application.class);

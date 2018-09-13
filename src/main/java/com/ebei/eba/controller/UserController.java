@@ -12,6 +12,10 @@ import com.ebei.eba.common.util.ResponseEx;
 import io.swagger.annotations.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -31,6 +35,7 @@ import com.ebei.eba.service.UserService;
 @RestController
 @RequestMapping("/user")
 @Api(value = "user" , description = "用户表")
+@CacheConfig(cacheNames = "user")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -39,7 +44,16 @@ public class UserController {
 	@ApiOperation(value = "按照userID获取详情", notes = "获取user详细信息")
 	@ApiImplicitParam(name = "userId", value = "主键ID", required = true, dataType = "String", paramType = "path")
 	@GetMapping("/byId/{userId}")
-	public ResponseEx<User> getById(@PathVariable String userId) {
+	/*
+	 *	key="'id_'+#userId"  或者  key="#p0"   （#user.id）
+	 *  不设置key 取默认值	RedisCacheConfig方法中的 keyGenerator
+	 *  也可指定keyGenerator 与 key 互斥
+	 *  cacheNames="user" 可省略 区CacheConfig中的cacheNames
+	 *  Cacheable中的设置要与 CachePut CacheEvict 配合
+	 */
+	//@Cacheable //不设置key 取默认值  也可以写成取第一个参数key="#p0"
+	@Cacheable(key="'user_id_' + #p0",unless="!#result.success or #result.data == null")
+	public ResponseEx<Object> getById(@PathVariable String userId) {
 
 		User user = userService.selectById(userId);
         return ResponseEx.createSuccess(user);
@@ -70,6 +84,7 @@ public class UserController {
 	/**自动生成 2018-09-03*/
 	@ApiOperation(value="新增user")
 	@PostMapping("/saveUser")
+//	@CachePut(key="#user.getUserName()")
 	public ResponseEx<Object> saveUser(@RequestBody @ApiParam(name="param",value="参数JSON",required=true) User user, @RequestHeader HttpHeaders headers) {
 		//String userAccount = headers.getFirst(Constants.USER_HEADER);
 		user.setCreator(user.getOperator());
@@ -88,6 +103,7 @@ public class UserController {
 		@ApiImplicitParam(name = "userId", value = "URL参数：userID", required = true)
 	})
 	@PostMapping("/editUser/{userId}")
+	@CacheEvict(key="'user_id_' + #p1")//#userId  修改清楚缓存
 	public ResponseEx<Object> editUser(@RequestBody @ApiParam(name="param",value="参数JSON",required=true) User user, @PathVariable String userId, @RequestHeader HttpHeaders headers) {
 		// 设置主键ID
         //String userAccount = headers.getFirst(Constants.USER_HEADER);
@@ -104,6 +120,7 @@ public class UserController {
 	@ApiOperation(value = "通过主键ID逻辑删除", notes = "逻辑删除用户表实体")
 	@ApiImplicitParam(name = "userId", value = "主键ID", required = true, dataType = "String", paramType = "path")
 	@GetMapping("/deleteById/{userId}")
+	@CacheEvict(key="'user_id_' + #p0")
 	public ResponseEx<Object> deleteById(@PathVariable String userId) {
         boolean ok = userService.deleteById(Long.valueOf(userId));
         if(!ok){
@@ -122,11 +139,10 @@ public class UserController {
 
 
 	/**自动生成 2018-09-03 */
-	@ApiOperation(value = "emptyMethod1 方法")
-	@GetMapping("/emptyMethod1")
-	public ResponseEx<Object> emptyMethod1(){
-        Map<String,Object> params = null;
-	    Object result = userService.emptyMethod1(params);
+	@ApiOperation(value = "clearAllUserCache 清空所有user缓存方法")
+	@GetMapping("/clearAllUserCache")
+	@CacheEvict(allEntries=true)
+	public ResponseEx<Object> clearAllUserCache(){
         return ResponseEx.createSuccess("成功");
 	}
 
@@ -208,4 +224,4 @@ public class UserController {
         return result;
     }
 
-}
+	}

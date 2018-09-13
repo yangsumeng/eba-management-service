@@ -3,6 +3,9 @@ package com.ebei.eba.mapper;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.ebei.eba.model.entity.User;
+import org.apache.ibatis.annotations.Insert;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
